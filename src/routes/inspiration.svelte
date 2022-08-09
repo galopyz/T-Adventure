@@ -3,7 +3,7 @@
   import { beforeUpdate, afterUpdate } from 'svelte';
 
   let div: HTMLElement | any;
-  let autoscroll;
+  let autoscroll: boolean;
 
   beforeUpdate(() => {
     // determine whether we should auto-scroll
@@ -21,7 +21,7 @@
 
   let comments = [{ author: 'eliza', text: eliza.getInitial() }];
 
-  function handleKeydown(event) {
+  function handleKeydown(event: any) {
     if (event.key === 'Enter') {
       const text = event.target.value;
       if (!text) return;
@@ -49,8 +49,8 @@
               author: 'eliza',
               text: reply,
             });
-        }, 500 + Math.random() * 500);
-      }, 200 + Math.random() * 200);
+        }, 36 * reply.length + Math.random() * 30 * reply.length);
+      }, 25 * text.length + Math.random() * 400);
     }
   }
 </script>
@@ -66,7 +66,7 @@
     {/each}
   </div>
 
-  <input on:keydown={handleKeydown} />
+  <input on:keydown={handleKeydown} placeholder="Chat with Eliza" />
 </div>
 
 <style>
@@ -84,6 +84,7 @@
     margin: 0 0 0.5em 0;
     overflow-y: auto;
     max-height: 320px;
+    min-height: 260px;
   }
 
   article {
