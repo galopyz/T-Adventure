@@ -68,6 +68,10 @@
   </div>
 
   <input on:keydown={handleKeydown} placeholder="Chat with Eliza" />
+
+  <p>
+    Learn more about <a href="https://en.wikipedia.org/wiki/ELIZA">Eliza</a>
+  </p>
 </div>
 
 <style>
@@ -75,7 +79,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    max-width: 320px;
+    max-width: 30em;
+    width: 60%;
     margin: var(--column-margin-top) auto 0 auto;
   }
 
@@ -84,8 +89,8 @@
     border-top: 1px solid #eee;
     margin: 0 0 0.5em 0;
     overflow-y: auto;
-    max-height: 320px;
-    min-height: 260px;
+    max-height: 25em;
+    min-height: 20em;
   }
 
   article {
