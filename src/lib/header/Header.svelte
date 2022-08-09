@@ -72,7 +72,7 @@
   </nav>
 
   <div class="corner">
-    <!-- <canvas bind:this={canvas} /> -->
+    <canvas bind:this={canvas} />
     <!-- TODO put something else here? github link? -->
   </div>
 </header>
