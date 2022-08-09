@@ -49,6 +49,7 @@
               author: 'eliza',
               text: reply,
             });
+          // more realistic wait time based on length of texts
         }, 36 * reply.length + Math.random() * 30 * reply.length);
       }, 25 * text.length + Math.random() * 400);
     }
