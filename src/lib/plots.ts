@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 let uid = 1;
 
 export const plots = writable([
-  { id: uid++, ordered: false, title: 'Eat banana', story: 'I ate a banana' },
+  { id: uid++, ordered: false, title: 'Eat banana', story: 'I ate a banana. `(choice (Eat apple) (Drink milk))' },
   { id: uid++, ordered: false, title: 'Eat apple', story: 'I ate an apple' },
   { id: uid++, ordered: true, title: 'Drink milk', story: 'I drank milk' },
   {
@@ -28,15 +28,15 @@ interface PlotType {
   story: string;
 }
 
-export function add(input: any) {
+export function add() {
   const plot = {
     id: uid++,
     ordered: false,
-    title: input.value,
+    title: '',
+    story: '',
   };
 
-  plots = [plot, ...plots];
-  input.value = '';
+  plots.update(plots => [plot, ...plots]);
 }
 
 export function remove(plot: PlotType) {

@@ -3,7 +3,6 @@
   import { crossfade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
   import { plots, add, remove, mark } from '$lib/plots';
-  import { onDestroy } from 'svelte';
 
   const [send, receive] = crossfade({
     duration: (d) => Math.sqrt(d * 200),
@@ -22,6 +21,11 @@
       };
     },
   });
+
+  function handleSubmit(event: any) {
+    console.log(event.target);
+    // add(event.target);
+  }
 </script>
 
 <h1>Create your story</h1>
@@ -67,10 +71,22 @@
     </div>
   </div>
 
-  <form>
-    <input placeholder="Title" />
-    <textarea placeholder="Story" />
-  </form>
+  <div class="editor">
+    <button on:click={() => add()}>Add Plot</button>
+    <label for="title">
+      Title:
+      <input
+        id="title"
+        placeholder="Title"
+        type="text"
+        bind:value={$plots[0].title}
+      />
+    </label>
+    <lable for="story" id="storyLabel">
+      Story:
+      <textarea id="story" placeholder="Story" bind:value={$plots[0].story} />
+    </lable>
+  </div>
 </div>
 
 <style>
@@ -90,11 +106,6 @@
     overflow: auto;
   }
 
-  .story > form {
-    font-size: 1.4em;
-    grid-column: 1/3;
-  }
-
   .right {
     text-align: right;
   }
@@ -106,7 +117,7 @@
     margin: 0 0 0.5em 0;
   }
 
-  label {
+  .board label {
     position: relative;
     line-height: 2.5;
     padding: 0.5em 2.5em 0.5em 2em;
@@ -125,7 +136,7 @@
     margin: 0;
   }
 
-  button {
+  .board label > button {
     position: absolute;
     top: 0;
     right: 0.2em;
@@ -141,13 +152,56 @@
     cursor: pointer;
   }
 
-  label:hover button {
+  .board label:hover button {
     opacity: 1;
   }
 
-  textarea {
+  .editor {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .editor * {
+    border: 1px solid hsl(240, 8%, 70%);
+    background-color: hsl(234, 71%, 8%);
+    color: rgb(224, 196, 196);
+    border-radius: 4px;
+    padding: 1em, 0.5em, 1em, 0.5em;
+  }
+
+  .editor label {
+    color: hsl(240, 8%, 70%);
+    padding: 1em;
+    margin: 1em;
+  }
+
+  /* #storyLabel {
+    width: 5em;
+    margin: 0, 2px, 0, 2px;
+    padding: 0.5em;
+  } */
+
+  /* .editor textarea { */
+  #storyLabel {
+    font-size: 1.2em;
     width: 100%;
-    height: 200px;
-    background-color: aqua;
+    height: 20em;
+    margin: 1em;
+    border: 1px solid hsl(240, 8%, 70%);
+    background-color: hsl(234, 71%, 8%);
+    color: rgb(224, 196, 196);
+  }
+
+  textarea {
+    font-size: 1.2em;
+    width: 85%;
+    height: 70%;
+    margin: 1em;
+    border: 1px solid hsl(240, 8%, 70%);
+    background-color: hsl(234, 71%, 8%);
+    color: rgb(224, 196, 196);
+    padding: 1em;
   }
 </style>
