@@ -18,7 +18,7 @@ import clientPromise from '$lib/mongodb-client';
 //   }
 // }
 
-export async function GET(request) {
+export async function GET() {
   try {
     const dbConnection = await clientPromise;
     const db = dbConnection.db('t-adventure');
@@ -34,4 +34,4 @@ export async function GET(request) {
     console.error(err);
   }
 }
-GET().then((data) => console.log(data));
+// GET().then((data) => console.log(data));
