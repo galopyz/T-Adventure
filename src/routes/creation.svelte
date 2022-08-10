@@ -2,7 +2,7 @@
   import { quintOut } from 'svelte/easing';
   import { crossfade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
-  import { plots, add, remove, mark } from '$lib/plots';
+  import { plots, add, remove, mark, reorder } from '$lib/plots';
 
   const [send, receive] = crossfade({
     duration: (d) => Math.sqrt(d * 200),
@@ -22,10 +22,11 @@
     },
   });
 
-  function handleSubmit(event: any) {
-    console.log(event.target);
-    // add(event.target);
-  }
+  $: unoredredPlots = $plots.filter((t) => t.order === -1);
+  $: inEdit = unoredredPlots[0] || { title: '', story: '', id: -1 };
+  $: orderedPlots = $plots
+    .filter((t) => t.order !== -1)
+    .sort((a, b) => a.order - b.order);
 </script>
 
 <h1>Create your story</h1>
@@ -34,14 +35,17 @@
   <div class="board">
     <div class="left">
       <h2>Unordered Plots</h2>
-      {#each $plots.filter((t) => !t.ordered) as plot (plot.id)}
+      {#each unoredredPlots as plot (plot.id)}
         <div
           in:receive={{ key: plot.id }}
           out:send={{ key: plot.id }}
           animate:flip={{ duration: 280 }}
         >
           <label>
-            <input type="checkbox" on:change={() => mark(plot, true)} />
+            <input
+              type="checkbox"
+              on:change={() => mark(plot.id, orderedPlots.length)}
+            />
             {plot.title}
             <button on:click={() => remove(plot)}>remove</button>
           </label>
@@ -51,7 +55,7 @@
 
     <div class="right">
       <h2>In Order</h2>
-      {#each $plots.filter((t) => t.ordered) as plot (plot.id)}
+      {#each orderedPlots as plot (plot.id)}
         <div
           in:receive={{ key: plot.id }}
           out:send={{ key: plot.id }}
@@ -61,7 +65,10 @@
             <input
               type="checkbox"
               checked
-              on:change={() => mark(plot, false)}
+              on:change={() => {
+                reorder(plot.order);
+                mark(plot.id, -1);
+              }}
             />
             {plot.title}
             <button on:click={() => remove(plot)}>remove</button>
@@ -76,15 +83,21 @@
     <label for="title">
       Title:
       <input
+        disabled={inEdit.id === -1}
         id="title"
-        placeholder="Title"
+        placeholder="Add a new plot to edit title."
         type="text"
-        bind:value={$plots[0].title}
+        bind:value={inEdit.title}
       />
     </label>
     <lable for="story" id="storyLabel">
       Story:
-      <textarea id="story" placeholder="Story" bind:value={$plots[0].story} />
+      <textarea
+        disabled={inEdit.id === -1}
+        id="story"
+        placeholder="Add a new plot to edit story."
+        bind:value={inEdit.story}
+      />
     </lable>
   </div>
 </div>
