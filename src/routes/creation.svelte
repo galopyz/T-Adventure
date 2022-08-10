@@ -190,13 +190,6 @@
     margin: 1em;
   }
 
-  /* #storyLabel {
-    width: 5em;
-    margin: 0, 2px, 0, 2px;
-    padding: 0.5em;
-  } */
-
-  /* .editor textarea { */
   #storyLabel {
     font-size: 1.2em;
     width: 100%;
