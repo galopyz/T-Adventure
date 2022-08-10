@@ -72,7 +72,7 @@
   </div>
 
   <div class="editor">
-    <button>Add Plot</button>
+    <button on:click={() => add()}>Add Plot</button>
     <label for="title">
       Title:
       <input

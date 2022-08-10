@@ -56,11 +56,11 @@
       <li class:active={$page.url.pathname === '/about'}>
         <a sveltekit:prefetch href="/about">About</a>
       </li>
-      <!-- <li class:active={$page.url.pathname === '/todos'}>
-				<a sveltekit:prefetch href="/todos">Todos</a>
-			</li> -->
-      <li class:active={$page.url.pathname === '/planner'}>
-        <a sveltekit:prefetch href="/planner">Planner</a>
+      <li class:active={$page.url.pathname === '/creation'}>
+        <a sveltekit:prefetch href="/creation">Creation</a>
+      </li>
+      <li class:active={$page.url.pathname === '/reading'}>
+        <a sveltekit:prefetch href="/reading">Reading</a>
       </li>
       <li class:active={$page.url.pathname === '/inspiration'}>
         <a sveltekit:prefetch href="/inspiration">Inspiration</a>
@@ -73,7 +73,6 @@
 
   <div class="corner">
     <canvas bind:this={canvas} />
-    <!-- TODO put something else here? github link? -->
   </div>
 </header>
 
