@@ -2,13 +2,7 @@
   import { browser, dev } from '$app/env';
   // we don't need any JS on this page, though we'll load
   // it in dev so that we get hot module replacement...
-  async function getPlots() {
-    const res = await fetch('/', {
-      method: 'GET',
-    });
-    const json = await res.json();
-    console.log(json);
-  }
+
   export const hydrate = dev;
 
   // ...but if the client-side router is already loaded
