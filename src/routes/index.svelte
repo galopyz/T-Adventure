@@ -3,21 +3,13 @@
   export const load = async function fetch({ fetch }) {
     const res = await fetch('mongo');
     const data = await res.json();
-    console.log(data);
-    // return {
-    //   props: {
-    //     data,
-    //   },
-    // };
+    // console.log(data);
+    return {
+      props: {
+        data,
+      },
+    };
   };
-  // async function getPlots() {
-  //   const res = await fetch('index', {
-  //     method: 'GET',
-  //   });
-  //   const json = await res.json();
-  //   console.log(json);
-  // }
-  // getPlots().then((data) => console.log(data));
 </script>
 
 <script lang="ts">

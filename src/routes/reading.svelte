@@ -1,10 +1,16 @@
 <script lang="ts">
   import { plots } from '$lib/plots';
+  import { load } from './index.svelte';
+
+  // load();
 
   let i = 0;
   const sortedStory = $plots
     .filter((t) => t.order !== -1)
     .sort((a, b) => a.order - b.order);
+
+  let environment = 'local';
+
   $: story = sortedStory[i];
   $: options = [{ text: 'hi', value: 0, selected: false }];
   $: selectedOption = -1;
