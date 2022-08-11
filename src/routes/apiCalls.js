@@ -19,22 +19,22 @@ export function createPlot(data) {
   }).then(handleResponse);
 }
 
-export function updatePlot(plot, _id) {
+export function updatePlot(data) {
   return fetch(api, {
     method: 'PUt',
     headers: {
       'Content-type': 'application/json',
     },
-    body: JSON.stringify({ plot, _id }),
+    body: JSON.stringify(data),
   }).then(handleResponse);
 }
 
-export function deltePlot(_id) {
+export function deletePlot(data) {
   return fetch(api, {
     method: 'DELETE',
     headers: {
       'Content-type': 'application/json',
     },
-    body: JSON.stringify({ _id }),
+    body: JSON.stringify(data),
   }).then(handleResponse);
 }

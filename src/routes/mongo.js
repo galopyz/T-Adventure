@@ -19,7 +19,7 @@ export async function POST({ request }) {
   }
 }
 
-export async function GET() {
+export async function GET({ request }) {
   try {
     const plots = await collection.find().toArray();
     return {
@@ -36,9 +36,9 @@ export async function GET() {
 export async function DELETE({ request }) {
   try {
     const option = await request.json();
-    console.log(option);
     const plots = await collection.deleteOne(option);
-    if (plots.deleteCount === 1) {
+    console.log(plots);
+    if (plots.deletedCount === 1) {
       return {
         status: 201,
         body: plots,
@@ -49,6 +49,25 @@ export async function DELETE({ request }) {
         body: 'delete not successful',
       };
     }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function PUT({ request }) {
+  try {
+    const body = await request.json();
+    console.log(body);
+    const newPlot = await collection.findOneAndUpdate(
+      { id: body.id },
+      { $set: { order: body.order } }
+    );
+    return {
+      status: 201,
+      body: {
+        newPlot,
+      },
+    };
   } catch (err) {
     console.error(err);
   }

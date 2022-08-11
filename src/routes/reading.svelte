@@ -3,24 +3,24 @@
   import { sortPlots } from '$lib/utils';
   import { readPlots } from './apiCalls';
 
+  $: story = environment === 'local' ? sortedStory : sortedMongoPlots;
+  $: options = [{ text: 'hi', value: 0, selected: false }];
+  $: selectedOption = -1;
+
   let promise;
   let mongoPlots;
   let sortedMongoPlots;
+  let plotIndex = 0;
+  let environment = 'local';
+  let skip = 0;
+
+  const sortedStory = sortPlots($plots);
+
   async function handleClick() {
     mongoPlots = await readPlots();
     sortedMongoPlots = sortPlots(mongoPlots.plots);
     console.log(sortedMongoPlots);
   }
-
-  let plotIndex = 0;
-  let environment = 'local';
-  let skip = 0;
-
-  $: story = environment === 'local' ? sortedStory : sortedMongoPlots;
-  $: options = [{ text: 'hi', value: 0, selected: false }];
-  $: selectedOption = -1;
-
-  const sortedStory = sortPlots($plots);
 
   function makeOptions(newOptions: Array<string>) {
     options = newOptions.map((o, i) => {
@@ -149,7 +149,7 @@
   }
 
   button:hover:not([disabled]) {
-    color: hsla(244, 83%, 16%, 0.849);
+    color: hsl(244, 83%, 16%);
     /* background-color: hsl(234, 48%, 49%); */
     background-position: 0;
     cursor: pointer;
