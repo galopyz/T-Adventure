@@ -1,15 +1,5 @@
 <script context="module" lang="ts">
   export const prerender = true;
-  export const load = async function fetch({ fetch }) {
-    const res = await fetch('mongo');
-    const data = await res.json();
-    // console.log(data);
-    return {
-      props: {
-        data,
-      },
-    };
-  };
 </script>
 
 <script lang="ts">
