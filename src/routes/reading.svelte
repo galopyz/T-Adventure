@@ -78,9 +78,11 @@
   >
 {/if}
 
+<h1>Reading Time</h1>
 <div class="theator">
-  <h1>Reading Time</h1>
-  <h2>{story[plotIndex].title}</h2>
+  <h2>
+    {story[plotIndex].title}
+  </h2>
   <p>{parse(story[plotIndex].story)}</p>
   {#each options as option (option.value)}
     <label>
