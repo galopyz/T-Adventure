@@ -23,7 +23,7 @@ export async function GET() {
     const dbConnection = await clientPromise;
     const db = dbConnection.db('t-adventure');
     const collection = db.collection('plots');
-    const plots = await collection.findOne({ id: 1 });
+    const plots = await collection.find().toArray();
     return {
       status: 200,
       body: {
