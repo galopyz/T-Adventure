@@ -34,4 +34,3 @@ export async function GET() {
     console.error(err);
   }
 }
-// GET().then((data) => console.log(data));
