@@ -47,7 +47,7 @@
               on:change={() => mark(plot.id, orderedPlots.length)}
             />
             {plot.title}
-            <button on:click={() => remove(plot)}>remove</button>
+            <button on:click={() => remove(plot.id)}>remove</button>
           </label>
         </div>
       {/each}
@@ -71,7 +71,7 @@
               }}
             />
             {plot.title}
-            <button on:click={() => remove(plot)}>remove</button>
+            <button on:click={() => remove(plot.id)}>remove</button>
           </label>
         </div>
       {/each}
