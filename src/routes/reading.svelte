@@ -1,19 +1,43 @@
+<script context="module" lang="ts">
+  interface PlotType {
+    id: number;
+    order: number;
+    title: string;
+    story: string;
+  }
+
+  let mongoPlots: Array<PlotType>;
+
+  export const load = async function fetch({ fetch }) {
+    try {
+      const res = await fetch('mongo');
+      const data = await res.json();
+      mongoPlots = data.plots;
+      return {
+        props: {
+          data,
+        },
+      };
+    } catch (err) {
+      console.error(err);
+    }
+  };
+</script>
+
 <script lang="ts">
   import { plots } from '$lib/plots';
-  import { load } from './index.svelte';
+  import { sortPlots } from '$lib/utils';
 
-  // load();
-
-  let i = 0;
-  const sortedStory = $plots
-    .filter((t) => t.order !== -1)
-    .sort((a, b) => a.order - b.order);
-
+  let plotIndex = 0;
   let environment = 'local';
+  let skip = 0;
 
-  $: story = sortedStory[i];
+  $: story = environment === 'local' ? sortedStory : sortedMongoPlots;
   $: options = [{ text: 'hi', value: 0, selected: false }];
   $: selectedOption = -1;
+
+  const sortedStory = sortPlots($plots);
+  const sortedMongoPlots = sortPlots(mongoPlots);
 
   function makeOptions(newOptions: Array<string>) {
     options = newOptions.map((o, i) => {
@@ -36,12 +60,28 @@
   }
 </script>
 
-<button class="Env-Button">To Global</button>
+{#if environment === 'local'}
+  <button
+    class="Env-Button"
+    on:click={() => {
+      environment = 'global';
+      plotIndex = 0;
+    }}>To Global</button
+  >
+{:else}
+  <button
+    class="Env-Button"
+    on:click={() => {
+      environment = 'local';
+      plotIndex = 0;
+    }}>To Local</button
+  >
+{/if}
 
 <div class="theator">
   <h1>Reading Time</h1>
-  <h2>{story.title}</h2>
-  <p>{parse(story.story)}</p>
+  <h2>{story[plotIndex].title}</h2>
+  <p>{parse(story[plotIndex].story)}</p>
   {#each options as option (option.value)}
     <label>
       <input
@@ -56,17 +96,25 @@
 
   <div class="navigation">
     <button
-      disabled={i === 0}
+      disabled={plotIndex === 0}
       on:click={() => {
-        i--;
+        plotIndex--;
       }}>prev</button
     >
     <button
+      disabled={plotIndex > story.length - 2}
       on:click={() => {
         if (options.length !== 0) {
-          i += selectedOption;
+          if (selectedOption === 0) {
+            skip = selectedOption + 1;
+          } else {
+            plotIndex += selectedOption;
+          }
+        } else if (skip !== 0) {
+          plotIndex += skip;
+          skip = 0;
         }
-        i++;
+        plotIndex += 1;
       }}>next</button
     >
   </div>
