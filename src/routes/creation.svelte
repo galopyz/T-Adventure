@@ -47,9 +47,7 @@
   let uid: number;
 
   async function handleClick() {
-    console.log(mongoPlots);
     sortedMongoPlots = sortPlots(mongoPlots);
-    console.log(sortedMongoPlots);
   }
 </script>
 

@@ -37,7 +37,6 @@ export async function DELETE({ request }) {
   try {
     const option = await request.json();
     const plots = await collection.deleteOne(option);
-    console.log(plots);
     if (plots.deletedCount === 1) {
       return {
         status: 201,
@@ -57,7 +56,6 @@ export async function DELETE({ request }) {
 export async function PUT({ request }) {
   try {
     const body = await request.json();
-    console.log(body);
     const newPlot = await collection.findOneAndUpdate(
       { id: body.id },
       { $set: { order: body.order } }

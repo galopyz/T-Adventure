@@ -19,7 +19,6 @@
   async function handleClick() {
     mongoPlots = await readPlots();
     sortedMongoPlots = sortPlots(mongoPlots.plots);
-    console.log(sortedMongoPlots);
   }
 
   function makeOptions(newOptions: Array<string>) {

@@ -4,7 +4,6 @@ dotenv.config();
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
-console.log('env is', process.env.NODE_ENV);
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
