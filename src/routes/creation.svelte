@@ -1,8 +1,21 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { quintOut } from 'svelte/easing';
   import { crossfade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
   import { plots, add, remove, mark, reorder } from '$lib/plots';
+  import { sortPlots } from '$lib/utils';
+  import { createPlot, readPlots, updatePlot, deletePlot } from './apiCalls';
+
+  async function updateMongo() {
+    const response = await readPlots();
+    mongoPlots = response.plots;
+    uid = mongoPlots.length;
+  }
+
+  onMount(async () => {
+    updateMongo();
+  });
 
   const [send, receive] = crossfade({
     duration: (d) => Math.sqrt(d * 200),
@@ -22,12 +35,40 @@
     },
   });
 
-  $: unoredredPlots = $plots.filter((t) => t.order === -1);
+  $: story = environment === 'local' ? $plots : mongoPlots;
+  $: unoredredPlots = story.filter((t) => t.order === -1);
   $: inEdit = unoredredPlots[0] || { title: '', story: '', id: -1 };
-  $: orderedPlots = $plots
-    .filter((t) => t.order !== -1)
-    .sort((a, b) => a.order - b.order);
+  $: orderedPlots = sortPlots(story);
+
+  let environment = 'local';
+  let promise;
+  let mongoPlots;
+  let sortedMongoPlots;
+  let uid: number;
+
+  async function handleClick() {
+    console.log(mongoPlots);
+    sortedMongoPlots = sortPlots(mongoPlots);
+    console.log(sortedMongoPlots);
+  }
 </script>
+
+{#if environment === 'local'}
+  <button
+    class="Env-Button"
+    on:click={() => {
+      promise = handleClick();
+      environment = 'global';
+    }}>To Global</button
+  >
+{:else}
+  <button
+    class="Env-Button"
+    on:click={() => {
+      environment = 'local';
+    }}>To Local</button
+  >
+{/if}
 
 <h1>Create your story</h1>
 
@@ -44,10 +85,26 @@
           <label>
             <input
               type="checkbox"
-              on:change={() => mark(plot.id, orderedPlots.length)}
+              on:change={async () => {
+                if (environment === 'local') {
+                  mark(plot.id, orderedPlots.length);
+                } else {
+                  await updatePlot({ id: plot.id, order: orderedPlots.length });
+                  updateMongo();
+                }
+              }}
             />
             {plot.title}
-            <button on:click={() => remove(plot.id)}>remove</button>
+            <button
+              on:click={async () => {
+                if (environment === 'local') {
+                  remove(plot.id);
+                } else {
+                  await deletePlot({ id: plot.id });
+                  updateMongo();
+                }
+              }}>remove</button
+            >
           </label>
         </div>
       {/each}
@@ -71,7 +128,16 @@
               }}
             />
             {plot.title}
-            <button on:click={() => remove(plot.id)}>remove</button>
+            <button
+              on:click={async () => {
+                if (environment === 'local') {
+                  remove(plot.id);
+                } else {
+                  await deletePlot({ id: plot.id });
+                  updateMongo();
+                }
+              }}>remove</button
+            >
           </label>
         </div>
       {/each}
@@ -79,7 +145,16 @@
   </div>
 
   <div class="editor">
-    <button on:click={() => add()}>Add Plot</button>
+    <button
+      on:click={async () => {
+        if (environment === 'local') {
+          add();
+        } else {
+          await createPlot({ id: uid++, order: -1, title: '', story: '' });
+          updateMongo();
+        }
+      }}>Add Plot</button
+    >
     <label for="title">
       Title:
       <input
@@ -209,5 +284,43 @@
     background-color: hsl(234, 71%, 8%);
     color: rgb(224, 196, 196);
     padding: 1em;
+  }
+
+  .Env-Button {
+    position: absolute;
+    right: 20%;
+    height: 3em;
+    width: 6em;
+    font-size: medium;
+  }
+
+  button {
+    margin: auto;
+    height: 2rem;
+    width: 8em;
+    padding: 0.2em;
+    border: 1px solid hsl(240, 8%, 70%);
+    border-radius: 0.3em;
+    background-color: hsl(234, 71%, 8%);
+    background-image: linear-gradient(
+      45deg,
+      hsl(234, 66%, 64%),
+      transparent 90%
+    );
+    background-position: 100%;
+    background-size: 400%;
+    color: var(--heading-color);
+    transition: background 0.3s ease-in-out;
+  }
+
+  button:disabled {
+    color: hsl(240, 34%, 24%);
+  }
+
+  button:hover:not([disabled]) {
+    color: hsl(244, 83%, 16%);
+    /* background-color: hsl(234, 48%, 49%); */
+    background-position: 0;
+    cursor: pointer;
   }
 </style>
