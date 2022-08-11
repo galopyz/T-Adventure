@@ -1,32 +1,16 @@
-<script context="module" lang="ts">
-  interface PlotType {
-    id: number;
-    order: number;
-    title: string;
-    story: string;
-  }
-
-  let mongoPlots: Array<PlotType>;
-
-  export const load = async function fetch({ fetch }) {
-    try {
-      const res = await fetch('mongo');
-      const data = await res.json();
-      mongoPlots = data.plots;
-      return {
-        props: {
-          data,
-        },
-      };
-    } catch (err) {
-      console.error(err);
-    }
-  };
-</script>
-
 <script lang="ts">
   import { plots } from '$lib/plots';
   import { sortPlots } from '$lib/utils';
+  import { readPlots } from './apiCalls';
+
+  let promise;
+  let mongoPlots;
+  let sortedMongoPlots;
+  async function handleClick() {
+    mongoPlots = await readPlots();
+    sortedMongoPlots = sortPlots(mongoPlots.plots);
+    console.log(sortedMongoPlots);
+  }
 
   let plotIndex = 0;
   let environment = 'local';
@@ -37,7 +21,6 @@
   $: selectedOption = -1;
 
   const sortedStory = sortPlots($plots);
-  const sortedMongoPlots = sortPlots(mongoPlots);
 
   function makeOptions(newOptions: Array<string>) {
     options = newOptions.map((o, i) => {
@@ -64,6 +47,7 @@
   <button
     class="Env-Button"
     on:click={() => {
+      promise = handleClick();
       environment = 'global';
       plotIndex = 0;
     }}>To Global</button
@@ -80,10 +64,12 @@
 
 <h1>Reading Time</h1>
 <div class="theator">
-  <h2>
-    {story[plotIndex].title}
-  </h2>
-  <p>{parse(story[plotIndex].story)}</p>
+  {#await promise then value}
+    <h2>
+      {story[plotIndex].title}
+    </h2>
+    <p>{parse(story[plotIndex].story)}</p>
+  {/await}
   {#each options as option (option.value)}
     <label>
       <input
