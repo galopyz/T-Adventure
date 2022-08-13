@@ -1,38 +1,36 @@
-# create-svelte
+# T-adventure
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A choose your adventure text game maker using SvelteKit and Serverless functions with Vercel.
+The app also uses MongoDB Atlas for data.
 
-## Creating a project
+Deployed on [Vercel](https://t-adventure-980oo0hoc-galopyz.vercel.app/).
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Creation
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+On the Creation tab, plots can be created, updated, and deleted. 
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Whatever is on the top of Unordered Plots will be on the editor to be edited.
 
-## Developing
+If plot needs choices for readers to choose, a writer can add "\`(choice" (without quotes) 
+with following options wrapped in paranthesis. For example, "`(choice (Eat apple) (Drink milk))" makes
+two choices: Eat apple and Drink milk. 
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Choosing first option will skip zero plot and choosing second option will skip one plot, so the writer can
+put a plot about "eat apple" and "drink milk" and each choice will lead reader to respective choice.
 
-```bash
-npm run dev
+If To Global button is clicked, plots in MongoDB Atlas are shown, and can be modified as well.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+Then, To Local button can be clicked to come back to local.
 
-## Building
+## Reading
 
-To create a production version of your app:
+On the Reading tab, the writer can read his story in order. Unordered plots on the Creation tab will not
+be shown on here.
 
-```bash
-npm run build
-```
+If To Global button is clicked, plots in MongoDB Atlas are shown.
 
-You can preview the production build with `npm run preview`.
+Then, To Local button can be clicked to come back to local.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Inspiration
+
+On the Inspiration tab, the writer can chat with Eliza for an inspiration for the story.
